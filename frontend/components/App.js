@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios'
+import Form from './Form'
+import TodoList from './TodoList'
 
 const URL = 'http://localhost:9000/api/todos'
 
@@ -16,7 +18,9 @@ export default class App extends React.Component {
   }
 
   resetForm = () => this.state({...this.state, todoNameInput: ''})
-  setAxiosResponseErr = err =>  this.setState({...this.state, error: err.response.data.message})
+  
+  setAxiosResponseErr = err =>
+  this.setState({...this.state, error: err.response.data.message})
 
   
   postNewTodo = () => {
@@ -64,23 +68,20 @@ toogleCompleted = id => () => {
   render() {
     return (
       <div>
-        <div id='error'>{this.state.error}</div>
-        <div>
-        <h2>Todos:</h2>
-       {
-          this.state.todos.reduce((acc, td) => {
-            if (this.state.displayCompleteds || !td.completed) return acc.concat(<div onClick={this.toogleCompleted(td.id)} key={td.id}>{td.name} {td.completed ? ' ✔️ ' : ''}</div>)
-            return acc
-          }, [])
-          //return <div onClick={this.toogleCompleted(td.id)} key={td.id}>{td.name} {td.completed ? ' ✔️ ' : ''}</div>
-                  
-        }
-        </div>
-      <form id="todoForm" onSubmit={this.onTodoFormSubmit}>
-        <input value={this.state.todoNameInput} onChange={this.onTodoNameChange} type='text' placeholder='Type todo'></input>
-        <input type='submit'></input>
-        </form>
-        <button onClick={this.toogleDisplayCompleteds}>{this.state.displayCompleteds ? 'Hide' : 'Show'} Completed</button>
+        <div id='error'>Error: {this.state.error}</div>
+        <TodoList
+        todos={this.state.todos}
+        displayCompleteds={this.state.displayCompleteds}
+        toogleCompleted={this.toogleCompleted}
+        />
+      <Form
+      onTodoFormSubmit={this.onTodoFormSubmit}
+      onTodoNameChange={this.onTodoNameChange}
+      toogleDisplayCompleteds={this.toogleDisplayCompleteds}
+      todoNameInput={this.state.todoNameInput}
+      displayCompleteds={this.state.displayCompleteds}
+
+      />
        </div>
     )
   }
